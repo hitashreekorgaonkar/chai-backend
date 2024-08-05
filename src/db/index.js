@@ -11,9 +11,9 @@ const connectDB = async () => {
     );
     console.log(`\nconnectionInstance: ${connectionInstance}`);
     // NOTE: connectionInstance.connection.host this is used for -> If by mistake instead of production server we connect to another server as DB is different for Production, Devlopment and Testing. So that we know on which HOST we are connecting.
-    // TODO: - console log `connectionInstance` and - Read more about process.exit code
+    //  TODO:  console log `connectionInstance` and - Read more about process.exit code
   } catch (error) {
-    console.log("MONGODB connection error", error);
+    console.log("MONGODB connection FAILED", error);
     process.exit(1);
   }
 };
