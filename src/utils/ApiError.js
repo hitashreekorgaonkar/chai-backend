@@ -1,3 +1,4 @@
+// NOTE: node js api error in node docs
 class ApiError extends Error {
   constructor(
     statusCode,
