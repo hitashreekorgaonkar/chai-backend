@@ -7,3 +7,5 @@ class ApiResponse {
     // NOTE: Server Status Code can be google mdn docs
   }
 }
+
+export { ApiResponse };

@@ -60,7 +60,7 @@ userSchema.pre("save", async function (next) {
 
   if (!this.isModified("password")) return next();
   s;
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 // NOTE: never write arrow fun () => {} like this in pre 29:30 ep.9 bcz. we dont't have 'this' reference in arrow fun
