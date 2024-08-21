@@ -170,8 +170,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: {
-        refreshToken: undefined,
+      $unset: {
+        refreshToken: 1, // this removes the field from the document
       },
     },
     {
@@ -293,7 +293,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error while uploading on avatar");
   }
 
-  await deleteFromCloudinary(coverImageLocalPath);
+  await deleteFromCloudinary(avatarLocalPath);
 
   const user = await User.findByIdAndUpdate(
     req.user?._id,
@@ -416,7 +416,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
   const user = await User.aggregate([
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(req.user._id),
+        _id: new mongoose.Types.ObjectId(`${req.user._id}`),
       },
     },
     {
