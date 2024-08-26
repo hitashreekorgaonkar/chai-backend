@@ -1,6 +1,7 @@
 import mongoose, { isValidObjectId } from "mongoose";
 import { Like } from "../models/like.model.js";
 import { Video } from "../models/video.model.js";
+import { Comment } from "../models/comment.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -36,7 +37,33 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 
 const toggleCommentLike = asyncHandler(async (req, res) => {
   const { commentId } = req.params;
-  //TODO: toggle like on comment
+
+  if (!commentId?.trim()) {
+    throw new ApiError(400, "Comment ID is required");
+  }
+
+  const checkCommentIdExists = await Comment.findById(commentId);
+  if (!checkCommentIdExists) throw new ApiError(404, "Comment not found");
+
+  const likedComment = await Like.findOne({
+    likedBy: { $exists: true, $ne: null, $eq: req.user._id },
+    comment: { $exists: true, $ne: null, $eq: commentId },
+  });
+
+  if (likedComment) {
+    await Like.findByIdAndDelete(likedComment._id);
+  } else {
+    await Like.create({
+      likedBy: req.user._id,
+      comment: commentId,
+    });
+  }
+
+  const msg = likedComment ? "Disliked" : "Liked";
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, `Comment is ${msg} successfully`));
 });
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
