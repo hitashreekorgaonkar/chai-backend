@@ -96,7 +96,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
     thumbnail: thumbnail.url,
     duration: videoFile.duration,
     owner: owner,
-    // TODO: Try aggregate here
   });
 
   return res
